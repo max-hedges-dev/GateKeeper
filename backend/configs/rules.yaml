@@ -1,0 +1,21 @@
+rules:
+  - id: insecure-server-header
+    description: "Server header exposes software/version"
+    target: headers
+    pattern: "(?i)^server:.*(apache|nginx|openresty|caddy|iis)"
+    severity: warning
+    advice: "Consider minimizing version disclosure in the Server header."
+
+  - id: clickjack
+    description: "Missing X-Frame-Options/Content-Security-Policy"
+    target: headers
+    pattern: "(?is)^(?!.*x-frame-options)(?!.*content-security-policy)"
+    severity: warning
+    advice: "Add X-Frame-Options or CSP frame-ancestors to prevent clickjacking."
+
+  - id: http-200
+    description: "HTTP status 200 returned (example rule)"
+    target: status
+    pattern: "^200$"
+    severity: info
+    advice: "Endpoint returns 200 OK."
