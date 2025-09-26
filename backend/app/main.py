@@ -1,9 +1,12 @@
+from .probe import scan_once
+
 from fastapi import FastAPI, HTTPException, Response
 from fastapi.middleware.cors import CORSMiddleware
 
 # Import our schemas and loader
 from .models import ChecksConfig, RulesConfig
 from .utils import load_and_validate
+
 
 app = FastAPI()
 
@@ -52,4 +55,17 @@ def get_rules_config():
         cfg = load_and_validate("rules.yaml", RulesConfig)
         return cfg.model_dump()
     except (FileNotFoundError, ValueError) as e:
+        raise HTTPException(status_code=500, detail=str(e))
+    
+    # dev-only scan endpoint to exercise Step 4
+@app.get("/api/scan")
+def api_scan():
+    """
+    Run a single local scan and return the raw snapshot.
+    (Rule engine will consume this in Step 5.)
+    """
+    try:
+        return scan_once()
+    except Exception as e:
+        # Surface failures clearly
         raise HTTPException(status_code=500, detail=str(e))
