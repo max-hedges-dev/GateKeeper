@@ -69,3 +69,6 @@ def api_scan():
     except Exception as e:
         # Surface failures clearly
         raise HTTPException(status_code=500, detail=str(e))
+    
+
+    #uvicorn backend.app.main:app --reload
