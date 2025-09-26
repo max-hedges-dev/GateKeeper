@@ -1,4 +1,5 @@
 from .probe import scan_once
+from .rules import apply_rules
 
 from fastapi import FastAPI, HTTPException, Response
 from fastapi.middleware.cors import CORSMiddleware
@@ -11,8 +12,8 @@ from .utils import load_and_validate
 app = FastAPI()
 
 ALLOWED_ORIGINS = [
-    "http://localhost:5173"
-    "http://127.0.0.1:5173"
+    "http://localhost:5173",
+    "http://127.0.0.1:5173",
 ]
 
 app.add_middleware(
@@ -70,5 +71,12 @@ def api_scan():
         # Surface failures clearly
         raise HTTPException(status_code=500, detail=str(e))
     
+
+@app.post("/api/scan")
+def scan_and_analyze():
+    snapshot = scan_once()
+    rules = load_and_validate("rules.yaml", RulesConfig)
+    findings = apply_rules(snapshot, rules)
+    return {"snapshot": snapshot, "findings": findings}
 
     #uvicorn backend.app.main:app --reload
