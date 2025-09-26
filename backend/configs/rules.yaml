@@ -12,10 +12,3 @@ rules:
     pattern: "(?is)^(?!.*x-frame-options)(?!.*content-security-policy)"
     severity: warning
     advice: "Add X-Frame-Options or CSP frame-ancestors to prevent clickjacking."
-
-  - id: http-200
-    description: "HTTP status 200 returned (example rule)"
-    target: status
-    pattern: "^200$"
-    severity: info
-    advice: "Endpoint returns 200 OK."
