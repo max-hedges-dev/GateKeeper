@@ -17,6 +17,9 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Backend code
 COPY backend/ ./backend/
 
+RUN apt-get update && apt-get install -y --no-install-recommends iproute2 \
+    && rm -rf /var/lib/apt/lists/*
+
 # Frontend build placed exactly where main.py resolves it: /app/frontend/dist
 # (main.py resolves ../../frontend/dist from backend/app/)
 COPY --from=frontend-build /frontend/dist ./frontend/dist

@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import platform
+import os
 import re
 import socket
 import subprocess
@@ -118,6 +119,9 @@ def http_fetch(scheme: str, host: str, port: int, timeout_s: float = 1.5) -> HTT
         return HTTPProbe(status=None, headers=None, body_snippet=f"(request error: {e})")
 
 
+def resolve_target_ip():
+    return os.getenv("TARGET_IP") or find_default_gateway()
+
 # ---------- high-level scan ----------
 
 def scan_once() -> dict:
@@ -128,7 +132,7 @@ def scan_once() -> dict:
     checks_cfg: ChecksConfig = load_and_validate("checks.yaml", ChecksConfig)
 
     # 2) find target
-    target_ip = find_default_gateway()
+    target_ip = resolve_target_ip()
 
     started = time.perf_counter()
     results: list[CheckResult] = []
@@ -173,3 +177,4 @@ def scan_once() -> dict:
         ],
     }
     return snapshot
+
