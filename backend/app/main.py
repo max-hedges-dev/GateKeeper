@@ -1,3 +1,6 @@
+from pathlib import Path
+from fastapi.staticfiles import StaticFiles
+
 from .probe import scan_once
 from .rules import apply_rules
 
@@ -7,6 +10,8 @@ from fastapi.middleware.cors import CORSMiddleware
 # Import our schemas and loader
 from .models import ChecksConfig, RulesConfig
 from .utils import load_and_validate
+
+FRONTEND_DIST = (Path(__file__).resolve().parents[2] / "frontend" / "dist")
 
 
 app = FastAPI()
@@ -80,3 +85,7 @@ def scan_and_analyze():
     return {"snapshot": snapshot, "findings": findings}
 
     #uvicorn backend.app.main:app --reload
+
+
+
+app.mount("/", StaticFiles(directory=FRONTEND_DIST, html=True), name="frontend")

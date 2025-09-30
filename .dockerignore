@@ -1,0 +1,9 @@
+.vscode
+.git
+.gitignore
+**/__pycache__/
+**/*.pyc
+venv/
+frontend/node_modules/
+frontend/dist/
+.azure-pipelines/
